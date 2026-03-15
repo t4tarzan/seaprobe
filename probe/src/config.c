@@ -22,7 +22,10 @@ int config_load(const char *path, probe_config_t *cfg)
     cfg->interval_sec = 10;
 
     FILE *fp = fopen(path, "r");
-    /* BUG: missing null check — crashes if file doesn't exist */
+    if (fp == NULL) {
+        fprintf(stderr, "Warning: config file '%s' not found, using defaults\n", path);
+        return 0;
+    }
 
     while (fgets(line, sizeof(line), fp)) {
         /* Strip newline */
